@@ -27,14 +27,12 @@ A quick checklist:
 ## Configuration
   Default under /etc/nutcracker.yml
 
-  Graceful Reload Configuration:
-  localhost:~:# ps -ef | grep bilitw   
-  root     27925  9192  0 18:09 pts/2    00:00:01 bilitw master
-  root     27930 27925  0 18:09 pts/2    00:00:00 bilitw worker 0
-  root     27931 27925  0 18:09 pts/2    00:00:00 bilitw worker 1
-  root     27932 27925  0 18:09 pts/2    00:00:00 bilitw worker 2
-  root     27933 27925  0 18:09 pts/2    00:00:00 bilitw worker 3
-  kill -SIGHUP 27925
+    Graceful Reload Configuration:
+    localhost:~:# ps -ef | grep bilitw
+    root     19521 19227  0 19:22 pts/0    00:00:00 bilitw master
+    root     19522 19521  0 19:22 pts/0    00:00:00 bilitw worker 0
+    root     19523 19521  0 19:22 pts/0    00:00:00 bilitw worker 1
+    kill -SIGHUP 19521
 
 ## Unit Test
   Dependency:
