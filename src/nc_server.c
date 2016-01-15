@@ -735,7 +735,7 @@ server_pool_conn(struct context *ctx, struct server_pool *pool, uint8_t *key,
         return NULL;
     }
 
-	log_error("tyson tyson tyson: %p", TAILQ_FIRST(&server->s_conn_q));
+	//log_error("tyson tyson tyson: %p", TAILQ_FIRST(&server->s_conn_q));
 
     status = server_connect(ctx, server, conn);
     if (status != NC_OK) {

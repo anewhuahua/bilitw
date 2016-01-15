@@ -345,7 +345,7 @@ proxy_accept(struct context *ctx, struct conn *p)
     for (;;) {
         sd = accept(p->sd, NULL, NULL);
 		
-		log_debug(LOG_NOTICE, "accepted conn %d", nc_worker_index);
+		//log_debug(LOG_NOTICE, "accepted conn %d", nc_worker_index);
 		
         if (sd < 0) {
             if (errno == EINTR) {
@@ -447,8 +447,8 @@ proxy_accept(struct context *ctx, struct conn *p)
         return status;
     }
 
-    log_debug(LOG_NOTICE, "accepted c %d on p %d from '%s'", c->sd, p->sd,
-              nc_unresolve_peer_desc(c->sd));
+    //log_debug(LOG_NOTICE, "accepted c %d on p %d from '%s'", c->sd, p->sd,
+    //          nc_unresolve_peer_desc(c->sd));
 
     return NC_OK;
 }
