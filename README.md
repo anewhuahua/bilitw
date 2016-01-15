@@ -9,7 +9,7 @@
 To build bilitw from source with _debug logs enabled_ and _assertions enabled_:
 
     $ git clone 
-    $ cd twemproxy
+    $ cd bilitw
     $ autoreconf -fvi
     $ ./configure  CFLAGS="-DGRACEFUL" --enable-debug=full
     $ make
@@ -26,6 +26,15 @@ A quick checklist:
 
 ## Configuration
   Default under /etc/nutcracker.yml
+
+  Graceful Reload Configuration:
+  localhost:~:# ps -ef | grep bilitw   
+  root     27925  9192  0 18:09 pts/2    00:00:01 bilitw master
+  root     27930 27925  0 18:09 pts/2    00:00:00 bilitw worker 0
+  root     27931 27925  0 18:09 pts/2    00:00:00 bilitw worker 1
+  root     27932 27925  0 18:09 pts/2    00:00:00 bilitw worker 2
+  root     27933 27925  0 18:09 pts/2    00:00:00 bilitw worker 3
+  kill -SIGHUP 27925
 
 ## Unit Test
   Dependency:
