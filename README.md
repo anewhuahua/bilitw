@@ -25,7 +25,7 @@ A quick checklist:
 
 
 ## Configuration
-  Default under conf/nutcracker.yml
+  Default under /etc/nutcracker.yml
 
 ## Unit Test
   Dependency:
