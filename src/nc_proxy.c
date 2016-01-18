@@ -204,6 +204,9 @@ proxy_listen(struct context *ctx, struct conn *p)
         return NC_ERROR;
     }
 
+	log_error("listen on p %d on addr '%.*s' success: %s, backlog %d", p->sd,
+                  pool->addrstr.len, pool->addrstr.data, strerror(errno), pool->backlog);
+
     status = nc_set_nonblocking(p->sd);
     if (status < 0) {
         log_error("set nonblock on p %d on addr '%.*s' failed: %s", p->sd,
