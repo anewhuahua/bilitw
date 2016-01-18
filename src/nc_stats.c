@@ -783,7 +783,7 @@ stats_master_send_rsp(int *psd)
 		len = nc_sendn(sd, buf, len);
 		if (len < 0) {
 			log_error("send stats on sd %d failed: %s", sd, strerror(errno));
-			continue;
+
 		}
 		close(sd);
 		return NC_OK;
@@ -843,7 +843,7 @@ stats_send_rsp(struct stats *st)
 {
     rstatus_t status;
     ssize_t n;
-    int sd;
+    //int sd;
 	int fd;
 
 	
@@ -1037,7 +1037,7 @@ stats_master_server(uint16_t stats_port, char *stats_ip)
     rstatus_t status;
     //struct stats *st;
 	struct sockinfo si;
-	string addr;
+	struct string addr;
 	int sd;
    
 	
