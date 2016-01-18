@@ -11,6 +11,7 @@ typedef struct {
      nc_pid_t   pid;
      int   slot;
      int   fd;
+	 int   len;
 } nc_channel_msg_t;
 
 /*

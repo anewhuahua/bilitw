@@ -56,7 +56,6 @@ nc_read_channel(int s, nc_channel_msg_t *message, size_t size)
     msg.msg_iov = iov;
     msg.msg_iovlen = 1;
  
-
     n = recvmsg(s, &msg, 0);
 
     if (n == -1) {
@@ -96,10 +95,12 @@ nc_read_channel(int s, nc_channel_msg_t *message, size_t size)
 			log_error("recvmsg() channel command: %d from %d", NC_CMD_TERMINATE, nc_worker_channel);
 			exit(1);
 	    }
+#ifdef GRACEFUL
 		if (message->command == NC_CMD_RELOAD_DONE) {
 			log_error("recvmsg() channel command: %d from %d", NC_CMD_RELOAD_DONE, nc_worker_channel);
 			exit(1);
 	    }
+#endif
 		
 		if (message->command == NC_CMD_GET_STATS) {
 			nc_get_stats_cmd = 1;
@@ -142,14 +143,12 @@ nc_read_channel(int s, nc_channel_msg_t *message, size_t size)
 			log_error("tyson, -- nc_reload_start: %d, nc_cnt_reload: %d", nc_reload_start, nc_cnt_reload);
 		}	
 #endif
+
+		if (message->command == NC_CMD_GET_STATS) {
+			return message->len;
+		}
 	}
-	/*
-	if (message->command == NC_CMD_REOPEN) {
-		log_error("recvmsg() channel command: %d from %d", NC_CMD_REOPEN, nc_worker_channel);
-		
-		replyReopenMsg();
-	}
-	*/
+	
 
     return n;
 }

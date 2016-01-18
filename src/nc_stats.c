@@ -755,6 +755,89 @@ stats_make_rsp(struct stats *st)
     return NC_OK;
 }
 
+
+
+static rstatus_t
+stats_master_send_rsp(int *psd)
+{
+    int n;
+	ssize_t len;
+    int sd;
+	int i;
+	nc_channel_msg_t     message;
+	char buf[1000];
+	memset(buf, 0, sizeof(char)*1000);
+	memset(&message, 0, sizeof(nc_channel_msg_t));
+	message.command = NC_CMD_GET_STATS;
+
+	sd = accept(*psd, NULL, NULL);
+	if (sd < 0) {
+        log_error("accept on m %d failed: %s", sd, strerror(errno));
+        return NC_ERROR;
+    }
+	
+	// still in reconfiguration process 
+	if (nc_reload_start) {
+		sprintf(buf, "%s", "no stats get due to still during reconfiguration period.");
+		len = nc_strlen(buf)+1;
+		len = nc_sendn(sd, buf, len);
+		if (len < 0) {
+			log_error("send stats on sd %d failed: %s", sd, strerror(errno));
+			continue;
+		}
+		close(sd);
+		return NC_OK;
+	}
+
+	//broadcast
+    for (i = 0; i < nc_last_process; i++) 
+	{
+        if (nc_processes[i].pid == -1 || nc_processes[i].pid == 0) 
+		{
+            continue;
+        }
+       
+        if (nc_write_channel(nc_processes[i].channel[0],
+                                  &message, sizeof(nc_channel_msg_t))
+           == NC_OK)
+        {
+			if (nc_set_blocking(nc_processes[i].channel[0]) < 0) {
+		    	log_error("set channel %d block failed while core timeout %s", 
+		        nc_processes[i].channel[0] , strerror(errno));
+				continue;
+			}
+		
+			n = nc_read_channel(nc_processes[i].channel[0], &env_global.ctrl_msg, sizeof(nc_channel_msg_t));
+			if (env_global.ctrl_msg.command != NC_CMD_GET_STATS || n < 0) {
+				log_error("failure: get stats from worker %d receive length,  %s", 
+		        nc_processes[i].channel[0] , strerror(errno));
+			} else {
+				log_error("success: get stats from worker %d receive length, %d", 
+		        nc_processes[i].channel[0] , n);
+				len = nc_recvn(nc_processes[i].channel[0], buf, n);
+				if (len < 0) {
+					log_error("recv stats on sd %d failed: %s", sd, strerror(errno));
+        			continue;
+				}
+				len = nc_sendn(sd, buf, len);
+				if (len < 0) {
+					log_error("send stats on sd %d failed: %s", sd, strerror(errno));
+					continue;
+				}
+
+			}
+        }
+    }
+	
+	if (nc_set_nonblocking(nc_processes[i].channel[0]) < 0) {
+		log_error("set channel %d nonblock failed while core timeout %s", 
+		        nc_processes[i].channel[0] , strerror(errno));
+	}
+	close(sd);
+    return NC_OK;
+}
+
+
 static rstatus_t
 stats_send_rsp(struct stats *st)
 {
@@ -762,6 +845,9 @@ stats_send_rsp(struct stats *st)
     ssize_t n;
     int sd;
 	int fd;
+
+	
+	
 
     status = stats_make_rsp(st);
     if (status != NC_OK) {
@@ -791,6 +877,18 @@ stats_send_rsp(struct stats *st)
     if (fd < 0) {
         return;
     }
+	
+	nc_channel_msg_t  message;
+	memset(&message, 0, sizeof(nc_channel_msg_t));
+	message.command = NC_CMD_GET_STATS;
+	message.len = st->buf.len;
+
+	nc_write_channel(nc_worker_channel, &message, sizeof(nc_channel_msg_t));
+	n = nc_sendn(nc_worker_channel, st->buf.data, st->buf.len);
+	if (n < 0) {
+		log_error("nc_sendn %d failed: %s", nc_worker_channel, strerror(errno));
+		return NC_ERROR;
+    }
     n = nc_write(fd, st->buf.data, st->buf.len);
 	if (n < 0) {
 		log_error("nc_write %d failed: %s", fd, strerror(errno));
@@ -799,6 +897,21 @@ stats_send_rsp(struct stats *st)
 	
     return NC_OK;
 }
+
+
+static void
+stats_master_loop_callback(void *arg1, void *arg2)
+{
+    int *psd = arg1;
+    int n = *((int *)arg2);
+
+    if (n == 0) {
+        return;
+    }
+
+	stats_master_send_rsp(psd);
+}
+
 
 static void
 stats_loop_callback(void *arg1, void *arg2)
@@ -832,7 +945,7 @@ static void *
 stats_master_loop(void *arg)
 {
 	//event_loop_stats(stats_loop_callback, arg);
-    event_loop_stats(stats_loop_callback, arg);
+    event_loop_stats(stats_master_loop_callback, arg);
 
     return NULL;
 }
@@ -918,25 +1031,16 @@ stats_stop_aggregator(struct stats *st)
 }
 
 
-/*
-struct stats *
-stats_master_server(uint16_t stats_port, char *stats_ip, int stats_interval,
-             char *source, struct array *server_pool)
+rstatus_t
+stats_master_server(uint16_t stats_port, char *stats_ip)
 {
     rstatus_t status;
-    struct stats *st;
+    //struct stats *st;
 	struct sockinfo si;
 	string addr;
 	int sd;
    
-    st->tid = (pthread_t) -1;
-    st->sd = -1;
-	status = pthread_create(&st->tid, NULL, stats_loop, st);
-    if (status < 0) {
-        log_error("stats aggregator create failed: %s", strerror(status));
-        return NC_ERROR;
-    }
-
+	
     string_set_raw(&addr, stats_ip);
     status = nc_resolve(&addr, stats_port, &si);
     if (status < 0) {
@@ -955,6 +1059,19 @@ stats_master_server(uint16_t stats_port, char *stats_ip, int stats_interval,
         return NC_ERROR;
     }
 
+
+	pthread_t *ptid = nc_alloc(sizeof(pthread_t));	
+	*ptid = (pthread_t) -1;
+	
+	status = pthread_create(ptid, NULL, stats_master_loop, &sd);
+	if (status < 0) {
+		log_error("stats aggregator create failed: %s", strerror(status));
+		return NC_ERROR;
+	}
+	log_debug(LOG_NOTICE, "pthread stats master create success %d'", status);
+
+
+
     status = bind(sd, (struct sockaddr *)&si.addr, si.addrlen);
     if (status < 0) {
         log_error("bind on m %d to addr '%.*s:%u' failed: %s", sd,
@@ -972,13 +1089,11 @@ stats_master_server(uint16_t stats_port, char *stats_ip, int stats_interval,
               addr.len, addr.data, stats_port);
 	
 	
-	
-	
 
     return NC_OK;
 }
 
-*/
+
 
 struct stats *
 stats_create(uint16_t stats_port, char *stats_ip, int stats_interval,

@@ -390,9 +390,10 @@ event_wait(struct event_base *evb, int timeout)
 void
 event_loop_stats(event_stats_cb_t cb, void *arg)
 {
-    struct stats *st = arg;
+    int *psd = arg;
     int status, ep;
     struct epoll_event ev;
+	int sd = *psd;
 
     ep = epoll_create(1);
     if (ep < 0) {
@@ -400,30 +401,30 @@ event_loop_stats(event_stats_cb_t cb, void *arg)
         return;
     }
 
-    ev.data.fd = st->sd;
+    ev.data.fd = sd;
     ev.events = EPOLLIN;
 
-    status = epoll_ctl(ep, EPOLL_CTL_ADD, st->sd, &ev);
+    status = epoll_ctl(ep, EPOLL_CTL_ADD, sd, &ev);
     if (status < 0) {
-        log_error("epoll ctl on e %d sd %d failed: %s", ep, st->sd,
+        log_error("epoll ctl on e %d sd %d failed: %s", ep, sd,
                   strerror(errno));
         goto error;
     }
-
+ 	
     for (;;) {
         int n;
 
-        n = epoll_wait(ep, &ev, 1, st->interval);
+        n = epoll_wait(ep, &ev, 1, STATS_INTERVAL);
         if (n < 0) {
             if (errno == EINTR) {
                 continue;
             }
             log_error("epoll wait on e %d with m %d failed: %s", ep,
-                      st->sd, strerror(errno));
+                      sd, strerror(errno));
             break;
         }
 
-        cb(st, &n);
+        cb(psd, &n);
     }
 
 error:

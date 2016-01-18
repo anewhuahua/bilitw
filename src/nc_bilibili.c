@@ -973,6 +973,8 @@ tw_master_cycle(struct env_master* env)
     sigemptyset(&set);
 
     nc_start_worker_processes(env);
+	stats_master_server(env->stats_port, env->stats_addr);
+
 
     // master
     //delay = 1000;
@@ -988,17 +990,19 @@ tw_master_cycle(struct env_master* env)
 		   	// like slow start
             // delay *= 2;			
             nc_sigalarm= 0;
-			
-			rebuild_fdset();
-			tv.tv_sec = 0;
-			tv.tv_usec = 0;
-			//log_error("tyson, %d", fds_width);
-			r = select(fds_width, &rdfs, NULL, NULL, &tv);
-			if (r) {
-				for (i = 0; i < fds_width; i++) {
-					if (FD_ISSET(i, &rdfs)){
-						nc_read_channel(i, &env_global.ctrl_msg, sizeof(nc_channel_msg_t));
-					}	
+	
+			if (nc_reload_start) {
+				rebuild_fdset();
+				tv.tv_sec = 0;
+				tv.tv_usec = 0;
+				//log_error("tyson, %d", fds_width);
+				r = select(fds_width, &rdfs, NULL, NULL, &tv);
+				if (r) {
+					for (i = 0; i < fds_width; i++) {
+						if (FD_ISSET(i, &rdfs)){
+							nc_read_channel(i, &env_global.ctrl_msg, sizeof(nc_channel_msg_t));
+						}	
+					}
 				}
 			}
 			
