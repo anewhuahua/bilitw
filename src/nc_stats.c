@@ -945,6 +945,8 @@ static void *
 stats_master_loop(void *arg)
 {
 	//event_loop_stats(stats_loop_callback, arg);
+	int *psd = arg;
+	log_error("sd %d", *psd);
     event_loop_stats(stats_master_loop_callback, arg);
 
     return NULL;
