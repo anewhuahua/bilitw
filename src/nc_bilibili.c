@@ -543,6 +543,7 @@ nc_get_options(int argc, char **argv, struct env_master *env)
 
         case 't':
             test_conf = 1;
+			env->conf_filename = optarg;
             break;
 
         case 'd':
