@@ -390,10 +390,10 @@ event_wait(struct event_base *evb, int timeout)
 void
 event_loop_stats(event_stats_cb_t cb, void *arg)
 {
-    int *psd = arg;
+    int *psd = (int*)(arg);
     int status, ep;
     struct epoll_event ev;
-	int sd = *((int*)psd);
+	int sd = *psd;
 
     ep = epoll_create(1);
     if (ep < 0) {
