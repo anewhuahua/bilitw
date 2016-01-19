@@ -94,9 +94,9 @@ nc_pid_t  nc_pid;
 static struct option long_options[] = {
     { "help",           no_argument,        NULL,   'h' },
     { "version",        no_argument,        NULL,   'V' },
-    { "test-conf",      required_argument,  NULL,   't' },
     { "daemonize",      no_argument,        NULL,   'd' },
-    { "describe-stats", no_argument,        NULL,   'D' },
+    { "describe-stats",  no_argument,        NULL,   'D' },
+	{ "test-conf",      required_argument,  NULL,   't' },
     { "verbose",        required_argument,  NULL,   'v' },
     { "output",         required_argument,  NULL,   'o' },
     { "conf-file",      required_argument,  NULL,   'c' },
@@ -110,7 +110,7 @@ static struct option long_options[] = {
     { NULL,             0,                  NULL,    0 }
 };
 
-static char short_options[] = "hVtdDv:o:c:s:i:a:p:m:n:M:";
+static char short_options[] = "hVdDt:v:o:c:s:i:a:p:m:n:M:";
 static char  master_process[] = "bilibili tw master process";
 static char* log_filename_global;
 static char* conf_filename_global;
