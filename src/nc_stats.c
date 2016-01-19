@@ -833,6 +833,7 @@ stats_master_send_rsp(int *psd)
 		log_error("set channel %d nonblock failed while core timeout %s", 
 		        nc_processes[i].channel[0] , strerror(errno));
 	}
+	shutdown(sd);
 	close(sd);
     return NC_OK;
 }
