@@ -1213,7 +1213,7 @@ int main(int argc, char **argv)
 	
 	count = 0;
 	for(i = 0; i<sysconf(_SC_NPROCESSORS_ONLN); i++) {
-		count+= env_global.cpu_mask & (0x1<<i)?1:0;
+		count+= env_global.cpu_mask & (0x1LL<<i)?1:0;
 		//log_error("count %d", count);
 	}
 	if (count < env_global.worker_processes) {
