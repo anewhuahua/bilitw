@@ -94,7 +94,7 @@ nc_pid_t  nc_pid;
 static struct option long_options[] = {
     { "help",           no_argument,        NULL,   'h' },
     { "version",        no_argument,        NULL,   'V' },
-    { "test-conf",      no_argument,        NULL,   't' },
+    { "test-conf",      required_argument,  NULL,   't' },
     { "daemonize",      no_argument,        NULL,   'd' },
     { "describe-stats", no_argument,        NULL,   'D' },
     { "verbose",        required_argument,  NULL,   'v' },
