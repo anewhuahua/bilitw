@@ -519,7 +519,8 @@ nc_get_options(int argc, char **argv, struct env_master *env)
 {
     int c, value;
 	int len;
-	int cores;
+	uint64_t cores;
+	uint64_t value1;
 
     opterr = 0;
 	//ASSERT(0);
@@ -650,20 +651,20 @@ nc_get_options(int argc, char **argv, struct env_master *env)
             env->worker_processes= value;			
 			break;
 		case 'M':
-			value = nc_atoi(optarg, strlen(optarg));
-            if (value <= 0) {
+			value1 = nc_atoi(optarg, strlen(optarg));
+            if (value1 <= 0) {
                 log_stderr("nutcracker: option -M requires a non-zero number");
                 return NC_ERROR;
             }
 			cores = sysconf(_SC_NPROCESSORS_ONLN);
-			cores = (1<<cores) -1;
+			cores = (1LL<<cores) -1;
 
-            if (value > cores || value < 1) {
+            if (value1 > cores || value1 < 1) {
                 log_stderr("bilitw: bilitw worker process cpu mask should be set between %d and" \
                            " %d", 1, cores);
                 return NC_ERROR;
             } 
-			env->cpu_mask = value;
+			env->cpu_mask = value1;
 			break;
 
         case '?':
@@ -1166,7 +1167,7 @@ int main(int argc, char **argv)
 
     nc_set_default_options(&env_global);
 	env_global.worker_processes = sysconf(_SC_NPROCESSORS_ONLN); 
-	env_global.cpu_mask = (1<<env_global.worker_processes) - 1;
+	env_global.cpu_mask = (0x1LL<<env_global.worker_processes) - 1;
 
     status = nc_get_options(nc_argc, nc_argv, &env_global);
     if (status != NC_OK) {

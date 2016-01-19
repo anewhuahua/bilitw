@@ -344,8 +344,8 @@ nc_start_worker_processes(struct env_master* env)
 		sprintf(process_name, "%s_%d", "bilitworker", i);
 		
 		for (j = 0; j < sysconf(_SC_NPROCESSORS_ONLN); j++) {
-		  if (env->cpu_mask & (0x1<<j)) {
-			env->cpu_mask&= ~(0x1<<j);
+		  if (env->cpu_mask & (0x1LL<<j)) {
+			env->cpu_mask&= ~(0x1LL<<j);
 			break;
 		  } 
 		}

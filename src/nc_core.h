@@ -164,7 +164,7 @@ struct env_master {
     unsigned        pidfile:1;                   /* pid file created? */
 
     int 		    worker_processes;
-	int 			cpu_mask;
+	uint64_t 		cpu_mask;
 	struct array    pool;        				 /* server_pool[] */
 	nc_channel_msg_t  ctrl_msg;					 /* for master-worker control message */
 };
