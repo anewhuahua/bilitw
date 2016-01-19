@@ -902,7 +902,7 @@ stats_send_rsp(struct stats *st)
 static void
 stats_master_loop_callback(void *arg1, void *arg2)
 {
-    int *psd = *((int*)arg1);
+    int *psd = ((int*)arg1);
     int n = *((int *)arg2);
 
     if (n == 0) {
@@ -945,8 +945,8 @@ static void *
 stats_master_loop(void *arg)
 {
 	//event_loop_stats(stats_loop_callback, arg);
-	int *psd = (int*)(arg);
-	log_error("sd %d", *psd);
+	int sd = *((int*)arg);
+	log_error("sd %d", sd);
     event_loop_stats(stats_master_loop_callback, arg);
 
     return NULL;

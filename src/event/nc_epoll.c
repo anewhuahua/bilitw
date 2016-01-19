@@ -390,10 +390,9 @@ event_wait(struct event_base *evb, int timeout)
 void
 event_loop_stats(event_stats_cb_t cb, void *arg)
 {
-    int *psd = (int*)(arg);
     int status, ep;
     struct epoll_event ev;
-	int sd = *psd;
+	int sd = *((int*)arg);
 
     ep = epoll_create(1);
     if (ep < 0) {
@@ -424,7 +423,7 @@ event_loop_stats(event_stats_cb_t cb, void *arg)
             break;
         }
 
-        cb(psd, &n);
+        cb(arg, &n);
     }
 
 error:
