@@ -1040,7 +1040,7 @@ stats_master_server(uint16_t stats_port, char *stats_ip)
     //struct stats *st;
 	struct sockinfo si;
 	struct string addr;
-	int sd;
+	//int sd;
    
 	
     string_set_raw(&addr, stats_ip);
@@ -1049,15 +1049,15 @@ stats_master_server(uint16_t stats_port, char *stats_ip)
         return status;
     }
 
-    sd = socket(si.family, SOCK_STREAM, 0);
-    if (sd < 0) {
+    nc_stats_listen_sd = socket(si.family, SOCK_STREAM, 0);
+    if (nc_stats_listen_sd < 0) {
         log_error("socket failed: %s", strerror(errno));
         return NC_ERROR;
     }
 
-    status = nc_set_reuseaddr(sd);
+    status = nc_set_reuseaddr(nc_stats_listen_sd);
     if (status < 0) {
-        log_error("set reuseaddr on m %d failed: %s", sd, strerror(errno));
+        log_error("set reuseaddr on m %d failed: %s", nc_stats_listen_sd, strerror(errno));
         return NC_ERROR;
     }
 
@@ -1065,8 +1065,8 @@ stats_master_server(uint16_t stats_port, char *stats_ip)
 	pthread_t *ptid = nc_alloc(sizeof(pthread_t));	
 	*ptid = (pthread_t) -1;
 	
-	log_error("master sd %d", sd);
-	status = pthread_create(ptid, NULL, stats_master_loop, (void*)(&sd));
+	log_error("master sd %d", nc_stats_listen_sd);
+	status = pthread_create(ptid, NULL, stats_master_loop, (void*)(&nc_stats_listen_sd));
 	if (status < 0) {
 		log_error("stats aggregator create failed: %s", strerror(status));
 		return NC_ERROR;
@@ -1075,20 +1075,20 @@ stats_master_server(uint16_t stats_port, char *stats_ip)
 
 
 
-    status = bind(sd, (struct sockaddr *)&si.addr, si.addrlen);
+    status = bind(nc_stats_listen_sd, (struct sockaddr *)&si.addr, si.addrlen);
     if (status < 0) {
-        log_error("bind on m %d to addr '%.*s:%u' failed: %s", sd,
+        log_error("bind on m %d to addr '%.*s:%u' failed: %s", nc_stats_listen_sd,
                   addr.len, addr.data, stats_port, strerror(errno));
         return NC_ERROR;
     }
 
-    status = listen(sd, SOMAXCONN);
+    status = listen(nc_stats_listen_sd, SOMAXCONN);
     if (status < 0) {
-        log_error("listen on m %d failed: %s", sd, strerror(errno));
+        log_error("listen on m %d failed: %s", nc_stats_listen_sd, strerror(errno));
         return NC_ERROR;
     }
 
-    log_debug(LOG_NOTICE, "m %d listening on '%.*s:%u'",sd,
+    log_debug(LOG_NOTICE, "m %d listening on '%.*s:%u'",nc_stats_listen_sd,
               addr.len, addr.data, stats_port);
 	
 	

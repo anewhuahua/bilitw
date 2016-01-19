@@ -81,6 +81,7 @@ int  nc_exiting;
 int  nc_reopen;
 int  nc_daemonized;
 int  nc_get_stats_cmd;
+int  nc_stats_listen_sd;
 
 int  nc_noaccept;
 int  nc_noaccepting;

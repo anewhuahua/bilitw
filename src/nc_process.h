@@ -111,6 +111,7 @@ extern int	nc_reload;
 extern int	nc_reload_start;
 extern int	nc_cnt_reload;
 extern int 	nc_get_stats_cmd;
+extern int  nc_stats_listen_sd;
 
 
 extern int 	nc_debug_quit;
