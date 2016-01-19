@@ -1066,7 +1066,7 @@ stats_master_server(uint16_t stats_port, char *stats_ip)
 	*ptid = (pthread_t) -1;
 	
 	log_error("master sd %d", sd);
-	status = pthread_create(ptid, NULL, stats_master_loop, &sd);
+	status = pthread_create(ptid, NULL, stats_master_loop, (void*)(&sd));
 	if (status < 0) {
 		log_error("stats aggregator create failed: %s", strerror(status));
 		return NC_ERROR;
