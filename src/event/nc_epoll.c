@@ -393,7 +393,7 @@ event_loop_stats(event_stats_cb_t cb, void *arg)
     int *psd = arg;
     int status, ep;
     struct epoll_event ev;
-	int sd = *psd;
+	int sd = *((int*)psd);
 
     ep = epoll_create(1);
     if (ep < 0) {
