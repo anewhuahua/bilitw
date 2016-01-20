@@ -11,7 +11,7 @@ To build bilitw from source with _debug logs enabled_ and _assertions enabled_:
     $ git clone 
     $ cd bilitw
     $ autoreconf -fvi
-    $ ./configure  CFLAGS="-DGRACEFUL" --enable-debug=full
+    $ ./configure  CFLAGS="-DGRACEFUL -g -O2" --enable-debug=full
     $ make
     $ make install
     $ nohup bilitw -o /var/log/bilitw.log  -v 3 &
