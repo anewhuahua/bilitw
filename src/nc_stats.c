@@ -826,10 +826,14 @@ stats_master_send_rsp(int *psd)
 				}
 
 			}
+
+			log_error("tyson i:%d", i);
+
 			if (nc_set_nonblocking(nc_processes[i].channel[0]) < 0) {
 				log_error("set channel %d nonblock failed while core timeout %s", 
 				        nc_processes[i].channel[0] , strerror(errno));
 			}
+
         }
     }
 	
