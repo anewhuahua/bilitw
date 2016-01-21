@@ -740,7 +740,7 @@ nc_master_pre_run(struct env_master *env)
         return status;
     }
     // master run as daemon process. belong to INIT process
-	daemonize = 0;  
+	// daemonize = 0;  
     if (daemonize) {
         status = nc_daemonize(1);
         if (status != NC_OK) {
