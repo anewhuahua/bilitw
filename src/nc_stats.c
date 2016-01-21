@@ -765,8 +765,8 @@ stats_master_send_rsp(int *psd)
     int sd;
 	int i;
 	nc_channel_msg_t     message;
-	char buf[1000];
-	memset(buf, 0, sizeof(char)*1000);
+	char buf[100000];
+	memset(buf, 0, sizeof(char)*100000);
 	memset(&message, 0, sizeof(nc_channel_msg_t));
 	message.command = NC_CMD_GET_STATS;
 
