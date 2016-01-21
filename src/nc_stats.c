@@ -765,8 +765,10 @@ stats_master_send_rsp(int *psd)
     int sd;
 	int i;
 	nc_channel_msg_t     message;
-	char buf[100000];
-	memset(buf, 0, sizeof(char)*100000);
+	char buf[1000];
+	memset(buf, 0, sizeof(char)*1000);
+	char *snd_buf = NULL;
+
 	memset(&message, 0, sizeof(nc_channel_msg_t));
 	message.command = NC_CMD_GET_STATS;
 
@@ -814,16 +816,20 @@ stats_master_send_rsp(int *psd)
 			} else {
 				log_error("success: get stats from worker %d receive length, %d", 
 		        nc_processes[i].channel[0] , n);
-				len = nc_recvn(nc_processes[i].channel[0], buf, n);
+
+				snd_buf = nc_alloc(n + n);				
+				len = nc_recvn(nc_processes[i].channel[0], snd_buf, n);
 				if (len < 0) {
 					log_error("recv stats on sd %d failed: %s", sd, strerror(errno));
         			continue;
 				}
-				len = nc_sendn(sd, buf, len);
+				len = nc_sendn(sd, snd_buf, len);
 				if (len < 0) {
 					log_error("send stats on sd %d failed: %s", sd, strerror(errno));
 					continue;
 				}
+				nc_free(snd_buf);
+				snd_buf = NULL;
 
 			}
 
