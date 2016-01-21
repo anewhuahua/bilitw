@@ -821,19 +821,25 @@ stats_master_send_rsp(int *psd)
 				len = nc_recvn(nc_processes[i].channel[0], snd_buf, n);
 				if (len < 0) {
 					log_error("recv stats on sd %d failed: %s", sd, strerror(errno));
+					nc_free(snd_buf);
+					snd_buf = NULL;
         			continue;
 				}
 				len = nc_sendn(sd, snd_buf, len);
 				if (len < 0) {
 					log_error("send stats on sd %d failed: %s", sd, strerror(errno));
+					nc_free(snd_buf);
+					snd_buf = NULL;
 					continue;
 				}
+				log_error("tyson iii:%d", i);
+				
 				nc_free(snd_buf);
 				snd_buf = NULL;
 
 			}
 
-			log_error("tyson i:%d", i);
+			
 
 			if (nc_set_nonblocking(nc_processes[i].channel[0]) < 0) {
 				log_error("set channel %d nonblock failed while core timeout %s", 
