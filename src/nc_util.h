@@ -42,7 +42,7 @@
     (sizeof(struct sockaddr_un) - offsetof(struct sockaddr_un, sun_path))
 
 #define NC_MAXHOSTNAMELEN   256
-#define SO_REUSEPORT 15
+//#define SO_REUSEPORT 15
 
 /*
  * Length of 1 byte, 2 bytes, 4 bytes, 8 bytes and largest integral
