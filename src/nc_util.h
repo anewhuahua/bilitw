@@ -44,7 +44,6 @@
 #define NC_MAXHOSTNAMELEN   256
 //#define SO_REUSEPORT 15
 
-
 /*
  * Length of 1 byte, 2 bytes, 4 bytes, 8 bytes and largest integral
  * type (uintmax_t) in ascii, including the null terminator '\0'
