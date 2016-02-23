@@ -125,6 +125,13 @@ struct conf {
     unsigned      sound:1;          /* sound? */
     unsigned      parsed:1;         /* parsed? */
     unsigned      valid:1;          /* valid? */
+
+	//
+	uint64_t      reload_timeout;
+	uint64_t      slow_req_duration;
+	uint64_t	  stats_duration;   /* msecs to printout stats */
+	// todo, cpu stuff
+
 };
 
 struct command {

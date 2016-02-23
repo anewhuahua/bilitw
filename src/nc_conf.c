@@ -545,16 +545,36 @@ conf_handler(struct conf *cf, void *data)
 
     if (array_n(&cf->arg) == 1) {
         value = array_top(&cf->arg);
-        log_debug(LOG_VVERB, "conf handler on '%.*s'", value->len, value->data);
-        return conf_pool_init(data, value);
+        log_debug(LOG_ERR, "conf handler on '%.*s'", value->len, value->data);
+
+		if (strcmp(value->data, 'global') == 0) {
+			return NC_OK;
+		} else {
+        	return conf_pool_init(data, value);
+		}
     }
+	
 
     narg = array_n(&cf->arg);
     value = array_get(&cf->arg, narg - 1);
     key = array_get(&cf->arg, narg - 2);
 
-    log_debug(LOG_VVERB, "conf handler on %.*s: %.*s", key->len, key->data,
+    log_debug(LOG_ERR, "conf handler on %.*s: %.*s", key->len, key->data,
               value->len, value->data);
+
+
+	if (strcmp(value->data, 'reload_timeout') == 0) {
+		cf->reload_timeout = nc_atoi(value->data, value->len);
+		return NC_OK;
+	}
+	if (strcmp(value->data, 'slow_req_duration') == 0) {
+		cf->slow_req_duration = nc_atoi(value->data, value->len);
+		return NC_OK;
+	}
+	if (strcmp(value->data, 'stats_duration') == 0) {
+		cf->stats_duration = nc_atoi(value->data, value->len);
+		return NC_OK;
+	}
 
     for (cmd = conf_commands; cmd->name.len != 0; cmd++) {
         char *rv;

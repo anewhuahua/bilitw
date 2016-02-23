@@ -142,9 +142,11 @@ struct context {
     uint32_t           max_ncconn;  /* max # client connections */
     uint32_t           max_nsconn;  /* max # server connections */
 
+
 #ifdef GRACEFUL
 	struct array 	   listen_conns;
 #endif
+
 
 };
 
@@ -167,6 +169,14 @@ struct env_master {
 	uint64_t 		cpu_mask;
 	struct array    pool;        				 /* server_pool[] */
 	nc_channel_msg_t  ctrl_msg;					 /* for master-worker control message */
+
+
+	//
+	uint64_t      	reload_timeout;
+	uint64_t      	slow_req_duration;
+	uint64_t	  	stats_duration;   			 /* msecs to printout stats */
+	// todo, cpu stuff
+
 };
 
 
