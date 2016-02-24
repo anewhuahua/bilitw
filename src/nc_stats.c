@@ -771,23 +771,27 @@ stats_master_send_rsp(int *psd)
 
 	memset(&message, 0, sizeof(nc_channel_msg_t));
 	message.command = NC_CMD_GET_STATS;
-
-	sd = accept(*psd, NULL, NULL);
-	if (sd < 0) {
-        log_error("accept on m %d failed: %s", sd, strerror(errno));
-        return NC_ERROR;
-    }
+	
+	if (*psd) {
+		sd = accept(*psd, NULL, NULL);
+		if (sd < 0) {
+	        log_error("accept on m %d failed: %s", sd, strerror(errno));
+	        return NC_ERROR;
+	    }
+	}
 	
 	// still in reconfiguration process 
 	if (nc_reload_start) {
 		sprintf(buf, "%s", "no stats get due to still during reconfiguration period.");
-		len = nc_strlen(buf)+1;
-		len = nc_sendn(sd, buf, len);
-		if (len < 0) {
-			log_error("send stats on sd %d failed: %s", sd, strerror(errno));
+		if (*psd) {
+			len = nc_strlen(buf)+1;
+			len = nc_sendn(sd, buf, len);
+			if (len < 0) {
+				log_error("send stats on sd %d failed: %s", sd, strerror(errno));
 
+			}
+			close(sd);
 		}
-		close(sd);
 		return NC_OK;
 	}
 
@@ -820,19 +824,22 @@ stats_master_send_rsp(int *psd)
 				snd_buf = nc_alloc(n + n);				
 				len = nc_recvn(nc_processes[i].channel[0], snd_buf, n);
 				if (len < 0) {
-					log_error("recv stats on sd %d failed: %s", sd, strerror(errno));
+					if (*psd) {
+						log_error("recv stats on sd %d failed: %s", sd, strerror(errno));
+					}
 					nc_free(snd_buf);
 					snd_buf = NULL;
         			continue;
 				}
-				len = nc_sendn(sd, snd_buf, len);
-				if (len < 0) {
-					log_error("send stats on sd %d failed: %s", sd, strerror(errno));
-					nc_free(snd_buf);
-					snd_buf = NULL;
-					continue;
+				if (*psd) {
+					len = nc_sendn(sd, snd_buf, len);
+					if (len < 0) {
+						log_error("send stats on sd %d failed: %s", sd, strerror(errno));
+						nc_free(snd_buf);
+						snd_buf = NULL;
+						continue;
+					}
 				}
-				log_error("tyson iii:%d", i);
 				
 				nc_free(snd_buf);
 				snd_buf = NULL;
@@ -849,9 +856,10 @@ stats_master_send_rsp(int *psd)
         }
     }
 	
-	
-	shutdown(sd, SHUT_RDWR);
-	close(sd);
+	if (*psd) {
+		shutdown(sd, SHUT_RDWR);
+		close(sd);
+	}
     return NC_OK;
 }
 
@@ -922,8 +930,11 @@ stats_master_loop_callback(void *arg1, void *arg2)
 {
     int *psd = ((int*)arg1);
     int n = *((int *)arg2);
-
+	
+	// timeout for stats_duration
     if (n == 0) {
+		psd = &n;		
+		stats_master_send_rsp(psd);
         return;
     }
 

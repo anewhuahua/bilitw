@@ -412,8 +412,7 @@ event_loop_stats(event_stats_cb_t cb, void *arg)
  	
     for (;;) {
         int n;
-
-        n = epoll_wait(ep, &ev, 1, STATS_INTERVAL);
+        n = epoll_wait(ep, &ev, 1, env_global.stats_duration);
         if (n < 0) {
             if (errno == EINTR) {
                 continue;
