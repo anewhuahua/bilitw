@@ -563,15 +563,15 @@ conf_handler(struct conf *cf, void *data)
               value->len, value->data);
 
 	
-	if (strcmp(value->data, "reload_timeout") == 0) {
+	if (strcmp(key->data, "reload_timeout") == 0) {
 		cf->reload_timeout = nc_atoi(value->data, value->len);
 		return NC_OK;
 	}
-	if (strcmp(value->data, "slow_req_duration") == 0) {
+	if (strcmp(key->data, "slow_req_duration") == 0) {
 		cf->slow_req_duration = nc_atoi(value->data, value->len);
 		return NC_OK;
 	}
-	if (strcmp(value->data, "stats_duration") == 0) {
+	if (strcmp(key->data, "stats_duration") == 0) {
 		cf->stats_duration = nc_atoi(value->data, value->len);
 		return NC_OK;
 	}
@@ -603,7 +603,7 @@ conf_begin_parse(struct conf *cf)
     rstatus_t status;
     bool done;
 
-    ASSERT(cf->sound && !cf->parsed);
+    //ASSERT(cf->sound && !cf->parsed);
     ASSERT(cf->depth == 0);
 
     status = conf_yaml_init(cf);
@@ -648,7 +648,7 @@ conf_end_parse(struct conf *cf)
     rstatus_t status;
     bool done;
 
-    ASSERT(cf->sound && !cf->parsed);
+    //ASSERT(cf->sound && !cf->parsed);
     ASSERT(cf->depth == 0);
 
     done = false;
@@ -686,7 +686,7 @@ conf_parse_core(struct conf *cf, void *data)
     rstatus_t status;
     bool done, leaf, new_pool;
 
-    ASSERT(cf->sound);
+    //ASSERT(cf->sound);
 
     status = conf_event_next(cf);
     if (status != NC_OK) {
