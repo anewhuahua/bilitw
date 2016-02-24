@@ -547,7 +547,7 @@ conf_handler(struct conf *cf, void *data)
         value = array_top(&cf->arg);
         log_debug(LOG_ERR, "conf handler on '%.*s'", value->len, value->data);
 
-		if (strcmp(value->data, 'global') == 0) {
+		if (strcmp(value->data, "global") == 0) {
 			return NC_OK;
 		} else {
         	return conf_pool_init(data, value);
@@ -563,15 +563,15 @@ conf_handler(struct conf *cf, void *data)
               value->len, value->data);
 
 	
-	if (strcmp(value->data, 'reload_timeout') == 0) {
+	if (strcmp(value->data, "reload_timeout") == 0) {
 		cf->reload_timeout = nc_atoi(value->data, value->len);
 		return NC_OK;
 	}
-	if (strcmp(value->data, 'slow_req_duration') == 0) {
+	if (strcmp(value->data, "slow_req_duration") == 0) {
 		cf->slow_req_duration = nc_atoi(value->data, value->len);
 		return NC_OK;
 	}
-	if (strcmp(value->data, 'stats_duration') == 0) {
+	if (strcmp(value->data, "stats_duration") == 0) {
 		cf->stats_duration = nc_atoi(value->data, value->len);
 		return NC_OK;
 	}
