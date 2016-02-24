@@ -1361,6 +1361,13 @@ conf_post_validate(struct conf *cf)
         log_error("conf: '%.*s' has no pools", cf->fname);
         return NC_ERROR;
     }
+	if (npool==1) {
+		log_error("conf: '%.*s' has no pools", cf->fname);
+	}
+	if (npool==2) {
+		log_error("conf: '%.*s' has no pools", cf->fname);
+	}
+
 
     /* validate pool */
     for (i = 0; i < npool; i++) {
