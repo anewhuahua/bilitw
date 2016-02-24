@@ -1353,7 +1353,7 @@ conf_post_validate(struct conf *cf)
     uint32_t i, npool;
     bool valid;
 
-    ASSERT(cf->sound && cf->parsed);
+    //ASSERT(cf->sound && cf->parsed);
     ASSERT(!cf->valid);
 
     npool = array_n(&cf->pool);
