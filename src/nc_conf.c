@@ -562,7 +562,7 @@ conf_handler(struct conf *cf, void *data)
     log_debug(LOG_ERR, "conf handler on %.*s: %.*s", key->len, key->data,
               value->len, value->data);
 
-
+	
 	if (strcmp(value->data, 'reload_timeout') == 0) {
 		cf->reload_timeout = nc_atoi(value->data, value->len);
 		return NC_OK;
@@ -788,7 +788,7 @@ conf_parse(struct conf *cf)
 {
     rstatus_t status;
 
-    ASSERT(cf->sound && !cf->parsed);
+    //ASSERT(cf->sound && !cf->parsed);
     ASSERT(array_n(&cf->arg) == 0);
 
     status = conf_begin_parse(cf);
