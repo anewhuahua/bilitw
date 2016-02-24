@@ -1,3 +1,8 @@
+global:
+  stats_duration: 600000
+  reload_timeout: 60000
+  slow_req_duration: 3000
+
 alpha:
   listen: 127.0.0.1:22121
   hash: fnv1a_64
