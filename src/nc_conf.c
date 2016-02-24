@@ -548,6 +548,7 @@ conf_handler(struct conf *cf, void *data)
         log_debug(LOG_ERR, "conf handler on '%.*s'", value->len, value->data);
 
 		if (strcmp(value->data, "global") == 0) {
+		    array_pop(&cf->pool);
 			return NC_OK;
 		} else {
         	return conf_pool_init(data, value);
@@ -1361,13 +1362,7 @@ conf_post_validate(struct conf *cf)
         log_error("conf: '%.*s' has no pools", cf->fname);
         return NC_ERROR;
     }
-	if (npool==1) {
-		log_error("conf: '%.*s' has no pools", cf->fname);
-	}
-	if (npool==2) {
-		log_error("conf: '%.*s' has no pools", cf->fname);
-	}
-
+	
 
     /* validate pool */
     for (i = 0; i < npool; i++) {
