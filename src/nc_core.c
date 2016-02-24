@@ -792,24 +792,30 @@ core_timeout(struct context *ctx)
 {
 #ifdef GRACEFUL
 	nc_channel_msg_t message;
-	if (nc_reload && !conn_ncurr_cconn()) {
-		log_error("worker %d(old) quit!!!", nc_worker_index);
-		
-		// send to reload_done via socketpair to master process
-		memset(&message, 0, sizeof(nc_channel_msg_t));
-		message.command = NC_CMD_RELOAD_DONE;
-		message.slot = nc_process_slot;
-		nc_write_channel(nc_worker_channel, &message, sizeof(nc_channel_msg_t));
-		
-		if (nc_set_blocking(nc_worker_channel) < 0) {
-        	log_error("set channel %d block failed while core timeout %s", 
-            nc_worker_channel , strerror(errno));
-	    }
-		nc_read_channel(nc_worker_channel, &env_global.ctrl_msg, sizeof(nc_channel_msg_t));
-		
-		//nc_reload = 0;
-		return;
+	if (nc_reload) {
+
+		uint64_t _reload_delta = nc_msec_now() - env_global.reload_time;
+
+		if (_reload_delta > env_global.reload_timeout || !conn_ncurr_cconn()) {
+			log_error("worker %d(old) quit!!!", nc_worker_index);
+			
+			// send to reload_done via socketpair to master process
+			memset(&message, 0, sizeof(nc_channel_msg_t));
+			message.command = NC_CMD_RELOAD_DONE;
+			message.slot = nc_process_slot;
+			nc_write_channel(nc_worker_channel, &message, sizeof(nc_channel_msg_t));
+			
+			if (nc_set_blocking(nc_worker_channel) < 0) {
+	        	log_error("set channel %d block failed while core timeout %s", 
+	            nc_worker_channel , strerror(errno));
+		    }
+			nc_read_channel(nc_worker_channel, &env_global.ctrl_msg, sizeof(nc_channel_msg_t));
+			
+			//nc_reload = 0;
+			return;
+		}
 	}
+
 #endif
 
     for (;;) {
@@ -938,6 +944,7 @@ core_reload(struct instance *nci)
 	
 	// set reload flag
 	nc_reload = 1;
+	env_global.reload_time = nc_msec_now();
 
 	// send to reload via socketpair to master process
 	memset(&message, 0, sizeof(nc_channel_msg_t));
