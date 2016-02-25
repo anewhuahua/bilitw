@@ -1188,11 +1188,11 @@ conf_pre_validate(struct conf *cf)
     if (status != NC_OK) {
         return status;
     }
-
+	/*
     status = conf_validate_structure(cf);
     if (status != NC_OK) {
         return status;
-    }
+    }*/
 
     cf->sound = 1;
 
@@ -1435,11 +1435,10 @@ conf_create(char *filename)
     }
 
     /* validate configuration file before parsing */
-	/*
     status = conf_pre_validate(cf);
     if (status != NC_OK) {
         goto error;
-    }*/
+    }
 
     /* parse the configuration file */
     status = conf_parse(cf);
