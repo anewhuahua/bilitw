@@ -27,6 +27,32 @@ A quick checklist:
 ## Configuration
   Default under /etc/nutcracker.yml
 
+  Block "global" is for global setting of bilitw.
+  stats_duration indicates the interval of statistics printout in log file.
+  default: 300000 milliseconds -> 5 minutes
+  reload_timeout indicates the timeout for graceful reload, if the timeout reached, old workers will close the client connection.
+  default: 120000 milliseconds -> 2 minutes
+  slow_req_duration is the timeout for slow request value.
+  slow request is the response of redis/memcached exceeds slow_req_duration timeout.
+  default: not set by default
+
+   global:
+     stats_duration: 600000
+     reload_timeout: 60000
+     slow_req_duration: 3000
+
+   alpha:
+     listen: 127.0.0.1:22121
+     hash: fnv1a_64
+     distribution: ketama
+     auto_eject_hosts: true
+     redis: true
+     server_retry_timeout: 2000
+     server_failure_limit: 1
+     servers:
+      - 127.0.0.1:6379:1 myserver
+      - 127.0.0.1:6380:1 myserver1
+
     Graceful Reload Configuration:
     localhost:~:# ps -ef | grep bilitw
     root     19521 19227  0 19:22 pts/0    00:00:00 bilitw master
