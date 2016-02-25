@@ -1277,6 +1277,12 @@ conf_validate_pool(struct conf *cf, struct conf_pool *cp)
         return NC_ERROR;
     }
 
+	if (!strcmp("global", cp->name.data)) {
+        log_error("conf: can not add global server pool in the configuration file");
+        return NC_ERROR;
+    }
+
+
     /* set default values for unset directives */
 
     if (cp->distribution == CONF_UNSET_DIST) {
