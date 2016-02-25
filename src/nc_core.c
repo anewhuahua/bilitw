@@ -406,8 +406,8 @@ core_timeout(struct context *ctx)
 				*(kpos->end) = '\0';
 			}
 			char *peer_str = nc_unresolve_peer_desc(msg->owner->sd);
-			log_debug(LOG_ERR, "req %"PRIu64" on type: %s, key: %s, client: %s, server: %s, timeout: %d", 
-					msg->id, msg_type->data, kpos->start, peer_str, server->name.data, env_global.slow_req_duration);
+			log_debug(LOG_ERR, "req %"PRIu64" on type: %s, key: %s, client: %s, server: %s, timeout: %d ms", 
+					msg->id, msg_type->data, kpos->start, peer_str, server->pname.data, env_global.slow_req_duration);
 	        msg_tmo_delete(msg);
 		} else {
 	        log_debug(LOG_INFO, "req %"PRIu64" on s %d timeout", msg->id, conn->sd);
