@@ -1237,9 +1237,12 @@ int main(int argc, char **argv)
         exit(1);
      } 
 	 
-	 env_global.stats_duration = cf->stats_duration;
-	 env_global.reload_timeout = cf->reload_timeout;
-	 env_global.slow_req_duration = cf->slow_req_duration;
+	 if (cf->stats_duration)
+	 	env_global.stats_duration = cf->stats_duration;
+	 if (cf->reload_timeout)
+	 	env_global.reload_timeout = cf->reload_timeout;
+	 if (cf->slow_req_duration)
+	 	env_global.slow_req_duration = cf->slow_req_duration;
 	
 
      /* initialize server pool from configuration */
