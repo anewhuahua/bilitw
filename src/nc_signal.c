@@ -224,10 +224,7 @@ signal_handler(int signo)
 	        //action = log_reopen;
 #ifdef GRACEFUL
 			core_reload(&nci_global);
-#else
-			core_ctx_recreate(&nci_global);
 #endif
-
 	        break;
 
 
