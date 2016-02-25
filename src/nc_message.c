@@ -164,7 +164,7 @@ msg_tmo_insert(struct msg *msg, struct conn *conn)
 	    node->key = nc_msec_now() + timeout;
 	    node->data = conn;
 	    rbtree_insert(&tmo_rbt, node);
-	    log_debug(LOG_VERB, "insert msg %"PRIu64" into tmo rbt with expiry of "
+	    log_debug(LOG_ERR, "insert msg %"PRIu64" into tmo rbt with expiry of "
 	              "%d msec", msg->id, timeout);
         return;
     }
