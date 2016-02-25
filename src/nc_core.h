@@ -172,10 +172,10 @@ struct env_master {
 
 
 	//
-	uint64_t      	reload_timeout;
-	uint64_t      	slow_req_duration;
-	uint64_t	  	stats_duration;   			 /* msecs to printout stats */
-	uint64_t		reload_time;
+	int64_t 	     	reload_timeout;
+	int64_t          	slow_req_duration;
+	int64_t			  	stats_duration;   			 /* msecs to printout stats */
+	int64_t 			reload_time;
 	// todo, cpu stuff
 
 };
