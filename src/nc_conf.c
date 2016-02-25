@@ -604,7 +604,7 @@ conf_begin_parse(struct conf *cf)
     rstatus_t status;
     bool done;
 
-    //ASSERT(cf->sound && !cf->parsed);
+    ASSERT(cf->sound && !cf->parsed);
     ASSERT(cf->depth == 0);
 
     status = conf_yaml_init(cf);
@@ -649,7 +649,7 @@ conf_end_parse(struct conf *cf)
     rstatus_t status;
     bool done;
 
-    //ASSERT(cf->sound && !cf->parsed);
+    ASSERT(cf->sound && !cf->parsed);
     ASSERT(cf->depth == 0);
 
     done = false;
@@ -789,7 +789,7 @@ conf_parse(struct conf *cf)
 {
     rstatus_t status;
 
-    //ASSERT(cf->sound && !cf->parsed);
+    ASSERT(cf->sound && !cf->parsed);
     ASSERT(array_n(&cf->arg) == 0);
 
     status = conf_begin_parse(cf);
@@ -1366,7 +1366,7 @@ conf_post_validate(struct conf *cf)
     uint32_t i, npool;
     bool valid;
 
-    //ASSERT(cf->sound && cf->parsed);
+    ASSERT(cf->sound && cf->parsed);
     ASSERT(!cf->valid);
 
     npool = array_n(&cf->pool);
