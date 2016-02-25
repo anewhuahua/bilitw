@@ -204,7 +204,7 @@ event_add_channel(struct event_base *evb, nc_channel_msg_t* message)
         log_error("epoll ctl on e %d fd %d failed: %s", ep, nc_worker_channel,
                   strerror(errno));
     } 
-    log_debug("epoll ctl on e %d fd %d add", ep, nc_worker_channel);
+    
     return status;
 }
 
@@ -224,7 +224,6 @@ event_del_channel(struct event_base *evb, nc_channel_msg_t* message)
                   strerror(errno));
     } 
 
-    log_debug("epoll ctl on e %d fd %d delete", ep, nc_worker_channel);
     return status;
 }
 
@@ -293,7 +292,7 @@ event_wait(struct event_base *evb, int timeout)
     ASSERT(nevent > 0);
 
     for (;;) {
-        int i, nsd, n;
+        int i, nsd;
 
         nsd = epoll_wait(ep, event, nevent, timeout);
         if (nsd > 0) {
