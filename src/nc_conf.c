@@ -859,6 +859,10 @@ conf_open(char *filename)
     cf->parsed = 0;
     cf->valid = 0;
 
+	cf->slow_req_duration = 0;
+	cf->reload_timeout = 0;
+	cf->stats_duration = 0;
+
     log_debug(LOG_VVERB, "opened conf '%s'", filename);
 
     return cf;
