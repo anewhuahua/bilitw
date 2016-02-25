@@ -1112,6 +1112,7 @@ conf_validate_structure(struct conf *cf)
 
         case YAML_MAPPING_END_EVENT:
             if (depth == CONF_MAX_DEPTH) {
+				/*
                 if (seq) {
                     seq = false;
                 } else {
@@ -1119,6 +1120,7 @@ conf_validate_structure(struct conf *cf)
                     log_error("conf: '%s' missing sequence directive at depth "
                               "%d", cf->fname, depth);
                 }
+				*/
             }
             depth--;
             count[depth] = 0;
@@ -1188,11 +1190,11 @@ conf_pre_validate(struct conf *cf)
     if (status != NC_OK) {
         return status;
     }
-	/*
+	
     status = conf_validate_structure(cf);
     if (status != NC_OK) {
         return status;
-    }*/
+    }
 
     cf->sound = 1;
 
