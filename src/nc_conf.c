@@ -545,7 +545,7 @@ conf_handler(struct conf *cf, void *data)
 
     if (array_n(&cf->arg) == 1) {
         value = array_top(&cf->arg);
-        log_debug(LOG_ERR, "conf handler on '%.*s'", value->len, value->data);
+        log_debug(LOG_VERB, "conf handler on '%.*s'", value->len, value->data);
 
 		if (strcmp(value->data, "global") == 0) {
 		    array_pop(&cf->pool);
@@ -560,7 +560,7 @@ conf_handler(struct conf *cf, void *data)
     value = array_get(&cf->arg, narg - 1);
     key = array_get(&cf->arg, narg - 2);
 
-    log_debug(LOG_ERR, "conf handler on %.*s: %.*s", key->len, key->data,
+    log_debug(LOG_VERB, "conf handler on %.*s: %.*s", key->len, key->data,
               value->len, value->data);
 
 	

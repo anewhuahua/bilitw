@@ -853,10 +853,15 @@ core_timeout(struct context *ctx)
 
 		int timeout = server_timeout(conn);
    		if (timeout <= 0) {
-			log_debug(LOG_ERR, "req %"PRIu64" on s %d timedout", msg->id, conn->sd);
+			struct string * msg_type = msg_type_string(msg->type);
+			struct keypos *kpos = array_get(msg->keys, 0);
+			if (kpos->end != NULL) {
+				*(kpos->end) = '\0';
+			}
+			log_debug(LOG_ERR, "req %"PRIu64" on type %s key %s timeout", msg->id, msg_type->data, kpos->start);
 	        msg_tmo_delete(msg);
 		} else {
-	        log_debug(LOG_INFO, "req %"PRIu64" on s %d timedout", msg->id, conn->sd);
+	        log_debug(LOG_INFO, "req %"PRIu64" on s %d timeout", msg->id, conn->sd);
 	        msg_tmo_delete(msg);
 	        conn->err = ETIMEDOUT;
 	        core_close(ctx, conn);
