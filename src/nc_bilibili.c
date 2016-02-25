@@ -499,7 +499,10 @@ nc_set_default_options(struct env_master *env)
     env->stats_port = NC_STATS_PORT;
     env->stats_addr = NC_STATS_ADDR;
     env->stats_interval = NC_STATS_INTERVAL;
+
 	env->stats_duration = NC_STATS_INTERVAL * 10;	// every 5 mins
+	env->reload_timeout = 1000 * 120;				// 2 mins for reload timeout
+	env->slow_req_duration = CONF_UNSET_NUM;
 
     status = nc_gethostname(env->hostname, NC_MAXHOSTNAMELEN);
     if (status < 0) {
