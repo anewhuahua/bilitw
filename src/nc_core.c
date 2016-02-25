@@ -404,7 +404,7 @@ core_timeout(struct context *ctx)
 			if (kpos->end != NULL) {
 				*(kpos->end) = '\0';
 			}
-			char *peer_str = nc_unresolve_peer_desc(req->owner->sd);
+			char *peer_str = nc_unresolve_peer_desc(msg->owner->sd);
 			log_debug(LOG_ERR, "req %"PRIu64" on type %s key %s peer %s timeout", msg->id, msg_type->data, kpos->start, peer_str);
 	        msg_tmo_delete(msg);
 		} else {
