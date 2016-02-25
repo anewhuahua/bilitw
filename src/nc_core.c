@@ -853,7 +853,7 @@ core_timeout(struct context *ctx)
 
 		int timeout = server_timeout(conn);
    		if (timeout <= 0) {
-			log_debug(LOG_INFO, "req %"PRIu64" on s %d timedout", msg->id, conn->sd);
+			log_debug(LOG_ERR, "req %"PRIu64" on s %d timedout", msg->id, conn->sd);
 	        msg_tmo_delete(msg);
 		} else {
 	        log_debug(LOG_INFO, "req %"PRIu64" on s %d timedout", msg->id, conn->sd);
