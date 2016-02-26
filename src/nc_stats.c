@@ -31,6 +31,7 @@ struct stats_desc {
     char *desc; /* stats description */
 };
 
+
 #define DEFINE_ACTION(_name, _type, _desc) { .type = _type, .name = string(#_name) },
 static struct stats_metric stats_pool_codec[] = {
     STATS_POOL_CODEC( DEFINE_ACTION )
