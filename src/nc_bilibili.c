@@ -1239,7 +1239,7 @@ int main(int argc, char **argv)
      } 
 	
 	 env_global.stats_fd = open(cf->stats_file, O_WRONLY | O_APPEND | O_CREAT, 0644);
-     if (env_global.stats_fd) {
+     if (env_global.stats_fd < 0) {
          log_stderr("opening log file '%s' failed: %s", cf->stats_file,
                    strerror(errno));
           return -1;
