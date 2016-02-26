@@ -268,7 +268,7 @@ rsp_forward(struct context *ctx, struct conn *s_conn, struct msg *msg)
         }
     }
 
-	int timeout = server_timeout(conn);
+	int timeout = server_timeout(s_conn);
     if (timeout <= 0 && env_global.slow_req_duration > 0) {
 		int64_t req_time = (nc_usec_now() - pmsg->start_ts) / 1000;
 		struct server *server = s_conn->owner;
