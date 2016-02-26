@@ -707,7 +707,7 @@ stats_make_rsp(struct stats *st)
     }
 
     for (i = 0; i < array_n(&st->sum); i++) {
-        struct stats_pool *stp = array_get(&st->sum, i);
+        struct stats_pool *stp = array_get(&st->current, i);
         uint32_t j;
 
         status = stats_begin_nesting(st, &stp->name);
@@ -919,6 +919,8 @@ stats_send_rsp(struct stats *st)
 		log_error("nc_sendn %d failed: %s", nc_worker_channel, strerror(errno));
 		return NC_ERROR;
     }
+
+	stats_swap(st);
 	/*
 	int fd = get_logger_fd();
     if (fd < 0) {

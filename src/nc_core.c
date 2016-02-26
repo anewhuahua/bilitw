@@ -481,7 +481,7 @@ core_loop(struct context *ctx)
 
     core_timeout(ctx);
 
-    stats_swap(ctx->stats);
+    //stats_swap(ctx->stats);
 
     return NC_OK;
 }
