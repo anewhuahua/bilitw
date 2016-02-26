@@ -268,6 +268,20 @@ rsp_forward(struct context *ctx, struct conn *s_conn, struct msg *msg)
         }
     }
 
+	int timeout = server_timeout(conn);
+    if (timeout <= 0 && env_global.slow_req_duration > 0) {
+		int64_t req_time = (nc_usec_now() - pmsg->start_ts) / 1000;
+		struct server *server = s_conn->owner;
+		struct string * msg_type = msg_type_string(pmsg->type);
+		struct keypos *kpos = array_get(pmsg->keys, 0);
+		if (kpos->end != NULL) {
+			*(kpos->end) = '\0';
+		}
+		char *peer_str = nc_unresolve_peer_desc(pmsg->owner->sd);
+		log_debug(LOG_ERR, "slow req %"PRIu64" on type: %s, key: %s, client: %s, server: %s, duration: %d ms", 
+					pmsg->id, msg_type->data, kpos->start, peer_str, server->pname.data, req_time);
+    }
+	
     rsp_forward_stats(ctx, s_conn->owner, msg, msgsize);
 }
 
