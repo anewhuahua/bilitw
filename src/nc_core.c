@@ -397,6 +397,7 @@ core_timeout(struct context *ctx)
             return;
         }
 
+#ifndef GRACEFUL
 		int timeout = server_timeout(conn);
    		if (timeout <= 0) {
 			struct server *server = conn->owner;
@@ -410,11 +411,16 @@ core_timeout(struct context *ctx)
 					msg->id, msg_type->data, kpos->start, peer_str, server->pname.data, env_global.slow_req_duration);
 	        msg_tmo_delete(msg);
 		} else {
+#endif
 	        log_debug(LOG_INFO, "req %"PRIu64" on s %d timeout", msg->id, conn->sd);
 	        msg_tmo_delete(msg);
 	        conn->err = ETIMEDOUT;
 	        core_close(ctx, conn);
+
+#ifndef GRACEFUL
 		}
+#endif
+
     }
 }
 
