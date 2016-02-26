@@ -268,6 +268,8 @@ rsp_forward(struct context *ctx, struct conn *s_conn, struct msg *msg)
         }
     }
 
+	
+	log_debug(LOG_ERR, "tysontyson");
 	int timeout = server_timeout(s_conn);
     if (timeout <= 0 && env_global.slow_req_duration > 0) {
 		int64_t req_time = (nc_usec_now() - pmsg->start_ts) / 1000;
