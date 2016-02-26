@@ -26,6 +26,10 @@
 #include <nc_core.h>
 #include <hashkit/nc_hashkit.h>
 
+
+#define NC_STATS_PATH		"/tmp/twstats.log"
+
+
 #define CONF_OK             (void *) NULL
 #define CONF_ERROR          (void *) "has an invalid value"
 

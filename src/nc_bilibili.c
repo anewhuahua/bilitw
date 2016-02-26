@@ -42,7 +42,7 @@
 
 
 #define NC_CONF_PATH        "/etc/nutcracker.yml"
-#define NC_STATS_PATH		"/tmp/twstats.log"
+
 
 #define NC_LOG_DEFAULT      LOG_NOTICE
 #define NC_LOG_MIN          LOG_EMERG
