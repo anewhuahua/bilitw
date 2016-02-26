@@ -840,6 +840,13 @@ stats_master_send_rsp(int *psd)
 						continue;
 					}
 				}
+	
+				len = nc_write(env_global.stats_fd, snd_buf, len);
+				if (len < 0) {
+					log_error("nc_write %d failed: %s", env_global.stats_fd, strerror(errno));
+					continue;
+			    }
+
 				
 				nc_free(snd_buf);
 				snd_buf = NULL;
@@ -870,7 +877,7 @@ stats_send_rsp(struct stats *st)
     rstatus_t status;
     ssize_t n;
     //int sd;
-	int fd;
+	//int fd;
 
 	
 	
@@ -899,10 +906,7 @@ stats_send_rsp(struct stats *st)
 	close(sd);
 	*/
 
-	fd = get_logger_fd();
-    if (fd < 0) {
-        return;
-    }
+	
 	
 	nc_channel_msg_t  message;
 	memset(&message, 0, sizeof(nc_channel_msg_t));
@@ -915,12 +919,18 @@ stats_send_rsp(struct stats *st)
 		log_error("nc_sendn %d failed: %s", nc_worker_channel, strerror(errno));
 		return NC_ERROR;
     }
+	/*
+	int fd = get_logger_fd();
+    if (fd < 0) {
+        return;
+    }
+
     n = nc_write(fd, st->buf.data, st->buf.len);
 	if (n < 0) {
 		log_error("nc_write %d failed: %s", fd, strerror(errno));
 		return NC_ERROR;
     }
-	
+	*/
     return NC_OK;
 }
 

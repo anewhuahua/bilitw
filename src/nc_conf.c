@@ -576,6 +576,14 @@ conf_handler(struct conf *cf, void *data)
 		cf->stats_duration = nc_atoi(value->data, value->len);
 		return NC_OK;
 	}
+	if (strcmp(key->data, "stats_file") == 0) {
+		cf->stats_file = nc_strndup(value->data, value->len + 1);
+	    if (cf->stats_file == NULL) {
+	        return NC_ERROR;
+	    }
+	    cf->stats_file[value->len] = '\0';
+		return NC_OK;
+	}
 
     for (cmd = conf_commands; cmd->name.len != 0; cmd++) {
         char *rv;
@@ -862,6 +870,7 @@ conf_open(char *filename)
 	cf->slow_req_duration = 0;
 	cf->reload_timeout = 0;
 	cf->stats_duration = 0;
+	cf->stats_file = NC_STATS_PATH;
 
     log_debug(LOG_VVERB, "opened conf '%s'", filename);
 

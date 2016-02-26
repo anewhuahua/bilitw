@@ -42,6 +42,7 @@
 
 
 #define NC_CONF_PATH        "/etc/nutcracker.yml"
+#define NC_STATS_PATH		"/tmp/twstats.log"
 
 #define NC_LOG_DEFAULT      LOG_NOTICE
 #define NC_LOG_MIN          LOG_EMERG
@@ -1236,7 +1237,13 @@ int main(int argc, char **argv)
         conf_destroy(cf);
         exit(1);
      } 
-	 
+	
+	 env_global.stats_fd = open(cf->stats_file, O_WRONLY | O_APPEND | O_CREAT, 0644);
+     if (env_global.stats_fd) {
+         log_stderr("opening log file '%s' failed: %s", cf->stats_file,
+                   strerror(errno));
+          return -1;
+     }
 	 if (cf->stats_duration)
 	 	env_global.stats_duration = cf->stats_duration;
 	 if (cf->reload_timeout)

@@ -130,6 +130,7 @@ struct conf {
 	uint64_t      reload_timeout;
 	uint64_t      slow_req_duration;
 	uint64_t	  stats_duration;   /* msecs to printout stats */
+	char		  *stats_file;
 	// todo, cpu stuff
 
 };

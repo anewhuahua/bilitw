@@ -176,6 +176,8 @@ struct env_master {
 	int64_t          	slow_req_duration;
 	int64_t			  	stats_duration;   			 /* msecs to printout stats */
 	int64_t 			reload_time;
+
+	int					stats_fd;
 	// todo, cpu stuff
 
 };
