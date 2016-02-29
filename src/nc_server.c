@@ -91,6 +91,23 @@ server_timeout(struct conn *conn)
     return pool->timeout;
 }
 
+
+
+int
+server_slow_duration(struct conn *conn)
+{
+    struct server *server;
+    struct server_pool *pool;
+
+    ASSERT(!conn->client && !conn->proxy);
+
+    server = conn->owner;
+    pool = server->owner;
+
+    return pool->slow_req_duration;
+}
+
+
 bool
 server_active(struct conn *conn)
 {

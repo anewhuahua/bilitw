@@ -104,9 +104,6 @@ struct server_pool {
     uint16_t           port;                 /* port */
     struct sockinfo    info;                 /* listen socket info */
     mode_t             perm;                 /* socket permission */
-	// !!!!!
-	// workaround, dist_type is used in master env, for listen proxy fd.
-	// !!!!
 	int                dist_type;            /* distribution type (dist_type_t) */
     int                key_hash_type;        /* key hash type (hash_type_t) */
     hash_t             key_hash;             /* key hasher */
@@ -118,6 +115,9 @@ struct server_pool {
     uint32_t           server_connections;   /* maximum # server connection */
     int64_t            server_retry_timeout; /* server retry timeout in usec */
     uint32_t           server_failure_limit; /* server failure limit */
+
+	int				   slow_req_duration;  /* slow req duration */
+
     struct string      redis_auth;           /* redis_auth password (matches requirepass on redis) */
     unsigned           require_auth;         /* require_auth? */
     unsigned           auto_eject_hosts:1;   /* auto_eject_hosts? */
@@ -129,6 +129,7 @@ struct server_pool {
 void server_ref(struct conn *conn, void *owner);
 void server_unref(struct conn *conn);
 int server_timeout(struct conn *conn);
+int server_slow_duration(struct conn *conn);
 bool server_active(struct conn *conn);
 rstatus_t server_init(struct array *server, struct array *conf_server, struct server_pool *sp);
 void server_deinit(struct array *server);

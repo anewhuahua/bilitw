@@ -399,6 +399,7 @@ core_timeout(struct context *ctx)
 
 #ifndef GRACEFUL
 		int timeout = server_timeout(conn);
+		int slow = server_slow_duration(conn);
    		if (timeout <= 0) {
 			struct server *server = conn->owner;
 			struct string * msg_type = msg_type_string(msg->type);
@@ -408,7 +409,7 @@ core_timeout(struct context *ctx)
 			}
 			char *peer_str = nc_unresolve_peer_desc(msg->owner->sd);
 			log_debug(LOG_ERR, "req %"PRIu64" on type: %s, key: %s, client: %s, server: %s, timeout: %d ms", 
-					msg->id, msg_type->data, kpos->start, peer_str, server->pname.data, env_global.slow_req_duration);
+					msg->id, msg_type->data, kpos->start, peer_str, server->pname.data, slow);
 	        msg_tmo_delete(msg);
 		} else {
 #endif

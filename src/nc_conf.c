@@ -106,6 +106,10 @@ static struct command conf_commands[] = {
       conf_set_num,
       offsetof(struct conf_pool, server_failure_limit) },
 
+	{ string("slow_req_duration"),
+	  conf_set_num,
+	  offsetof(struct conf_pool, slow_req_duration) },
+
     { string("servers"),
       conf_add_server,
       offsetof(struct conf_pool, server) },
@@ -205,6 +209,7 @@ conf_pool_init(struct conf_pool *cp, struct string *name)
     cp->server_connections = CONF_UNSET_NUM;
     cp->server_retry_timeout = CONF_UNSET_NUM;
     cp->server_failure_limit = CONF_UNSET_NUM;
+	cp->slow_req_duration = CONF_UNSET_NUM
 
     array_null(&cp->server);
 
@@ -344,6 +349,7 @@ conf_pool_each_transform(void *elem, void *data)
     sp->server_failure_limit = (uint32_t)cp->server_failure_limit;
     sp->auto_eject_hosts = cp->auto_eject_hosts ? 1 : 0;
     sp->preconnect = cp->preconnect ? 1 : 0;
+	sp->slow_req_duration = cp->slow_req_duration; 
 
     status = server_init(&sp->server, &cp->server, sp);
     if (status != NC_OK) {
@@ -1314,6 +1320,10 @@ conf_validate_pool(struct conf *cf, struct conf_pool *cp)
 
     if (cp->backlog == CONF_UNSET_NUM) {
         cp->backlog = CONF_DEFAULT_LISTEN_BACKLOG;
+    }
+
+	if (cp->slow_req_duration == CONF_UNSET_NUM) {
+        cp->slow_req_duration = cf->slow_req_duration;
     }
 
     cp->client_connections = CONF_DEFAULT_CLIENT_CONNECTIONS;

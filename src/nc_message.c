@@ -158,9 +158,11 @@ msg_tmo_insert(struct msg *msg, struct conn *conn)
     ASSERT(!msg->quit && !msg->noreply);
 
     timeout = server_timeout(conn);
+	
 #ifndef GRACEFUL
-    if (timeout <= 0 && env_global.slow_req_duration > 0) {
-		timeout = env_global.slow_req_duration;
+	int slow = server_slow_duration(conn)
+    if (timeout <= 0 && slow > 0) {
+		timeout = slow;
 		node = &msg->tmo_rbe;
 	    node->key = nc_msec_now() + timeout;
 	    node->data = conn;
