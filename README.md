@@ -42,10 +42,12 @@ A quick checklist:
 	global:
 	 stats_duration: 600000
 	 reload_timeout: 60000
-	 slow_req_duration: 3000
+	 slow_req_duration: 5000
+     stats_file: /tmp/twstats.log
 	
 	alpha:
 	 listen: 127.0.0.1:22121
+	 slow_req_duration: 3000
 	 hash: fnv1a_64
 	 distribution: ketama
 	 auto_eject_hosts: true
