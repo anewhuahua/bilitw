@@ -209,7 +209,7 @@ conf_pool_init(struct conf_pool *cp, struct string *name)
     cp->server_connections = CONF_UNSET_NUM;
     cp->server_retry_timeout = CONF_UNSET_NUM;
     cp->server_failure_limit = CONF_UNSET_NUM;
-	cp->slow_req_duration = CONF_UNSET_NUM
+	cp->slow_req_duration = CONF_UNSET_NUM;
 
     array_null(&cp->server);
 
