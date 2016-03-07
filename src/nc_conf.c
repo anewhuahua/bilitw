@@ -1131,10 +1131,10 @@ conf_validate_structure(struct conf *cf)
 
         case YAML_MAPPING_END_EVENT:
             if (depth == CONF_MAX_DEPTH) {
-				/*
+				
                 if (seq) {
                     seq = false;
-                } else {
+                } /* else {
                     error = true;
                     log_error("conf: '%s' missing sequence directive at depth "
                               "%d", cf->fname, depth);
