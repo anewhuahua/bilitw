@@ -1,0 +1,15 @@
+pipeline {
+   agent any
+
+   stages {
+      stage('build') {
+         steps {
+            sh """
+            autoreconf -fvi
+            ./configure  CFLAGS="-DGRACEFUL -g -O2" --enable-debug=full
+            make
+            """
+         }
+      }
+   }
+}
